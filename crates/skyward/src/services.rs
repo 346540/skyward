@@ -45,6 +45,19 @@ const WAITING_CALLERS: libc::c_int = 1 << 30;
 /// from.
 const LIBRARY_PATH: &str = "LD_LIBRARY_PATH";
 
+/// The installed system's folders of libraries, where a program on the
+/// vendor or the odm partition finds the few it shares with the system: the
+/// loader, and what the vendor partition's libraries are built on. A
+/// recovery carries none of them, so they are searched last of all, after
+/// whatever the program names itself.
+const SHARED_LIBRARIES: [&str; 2] = ["/mnt/system/system/lib64", "/mnt/system/system/lib64/bootstrap"];
+
+/// Whether a program on `path` is the installed system's, on its vendor or
+/// odm partition, and so may need those folders.
+fn on_vendor_or_odm(path: &str) -> bool {
+    matches!(path.split('/').nth(1), Some("vendor" | "odm"))
+}
+
 /// Keep each program running, one thread per program: start it, and start
 /// it again whenever it exits. They are started in the order they are
 /// given, and one that says what it will be ready with holds up those
@@ -401,8 +414,22 @@ fn command(s: &Service, who: &Credentials, given: &Given, handed: &[(String, Own
             }
         }
     }
+    // A program the installed system's partitions carry may find a library
+    // it shares with the system in the folders Android gives it, which a
+    // recovery does not carry: the same folder is opened to it last, so that
+    // one the program names itself still comes first.
+    if on_vendor_or_odm(&s.path) {
+        for shared in SHARED_LIBRARIES {
+            if !libraries.iter().any(|l| l == shared) {
+                libraries.push(shared.to_string());
+            }
+        }
+    }
     if !libraries.is_empty() {
         cmd.env(LIBRARY_PATH, libraries.join(":"));
+        if on_vendor_or_odm(&s.path) {
+            let _ = skyward_sys::kmsg(&format!("{} finds its libraries in {}", s.path, libraries.join(":")));
+        }
     }
     for (variable, socket) in handed {
         cmd.env(variable, socket.as_raw_fd().to_string());
