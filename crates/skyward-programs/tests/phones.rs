@@ -208,7 +208,7 @@ fn nezha_s_programs_are_found_as_they_were_started_on_the_phone() {
         Started::from(Service {
             ready_service: Some(WEAVER.into()),
             capabilities: strings(&["WAKE_ALARM"]),
-            ..program("/odm/bin/hw/android.hardware.weaver-service", &ON_ODM, "system", &["system", "drmrpc"])
+            ..program("/odm/bin/hw/android.hardware.weaver-service", &ON_ODM, "root", &[])
         }),
         Started::from(Service { ready_service: Some(BOOT.into()), ..program("/vendor/bin/hw/android.hardware.boot-service.qti", &ON_VENDOR, "root", &["root"]) }),
     ];
@@ -246,7 +246,7 @@ fn nezha_s_other_builds_reach_their_weaver_s_secure_element_through_the_secure_e
             ..program("/vendor/bin/hw/android.hardware.secure_element-service.qti", &ON_VENDOR, "system", &["nfc", "system"])
         };
         assert_eq!(**element, Started::from(own));
-        let thales = Service { ready_service: Some(WEAVER.into()), ..program("/odm/bin/hw/android.hardware.weaver-service.thales", &ON_ODM, "vendor_thales_weaver", &["vendor_thales_weaver", "system", "drmrpc"]) };
+        let thales = Service { ready_service: Some(WEAVER.into()), ..program("/odm/bin/hw/android.hardware.weaver-service.thales", &ON_ODM, "root", &[]) };
         assert_eq!(**weaver, Started { anew: true, ..Started::from(thales) }, "it holds on to the service the recovery serves");
         assert!(found.iter().filter(|started| started.anew).count() == 1);
     }
