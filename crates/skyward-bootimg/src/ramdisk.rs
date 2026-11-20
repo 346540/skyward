@@ -80,11 +80,18 @@ impl Ramdisk {
         Ok(Ramdisk { entries })
     }
 
-    /// Pack as a newc archive compressed the way AOSP packs boot ramdisks,
-    /// with the reference `lz4` tool in legacy framing (the kernel's initramfs
-    /// unpacker reads no other LZ4 framing) at its highest compression.
+    /// Pack as a newc archive compressed the way AOSP packs boot ramdisks, in
+    /// LZ4's legacy framing (the kernel's initramfs unpacker reads no other
+    /// LZ4 framing). The reference `lz4` tool is used where it is installed,
+    /// its highest compression packing the archive tighter; where it is not,
+    /// the archive is compressed in process, so that an image builds on a
+    /// machine without the tool, such as the phone itself.
     pub fn encode(&self) -> Result<Vec<u8>> {
-        Ok(lz4_legacy(&self.archive()?))
+        let archive = self.archive()?;
+        match lz4_tool(&archive) {
+            Ok(packed) => Ok(packed),
+            Err(_) => Ok(lz4_legacy(&archive)),
+        }
     }
 
     /// Pack as a newc archive, uncompressed.
