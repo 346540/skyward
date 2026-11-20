@@ -89,7 +89,7 @@ read and set properties.
 
 | Device | Codename | Tested system version |
 | --- | --- | --- |
-| Xiaomi 17 Ultra | `nezha` | OS4.0.4.0.XPACNXM (Android 17) |
+| Xiaomi 17 Ultra | `nezha` | OS4.0.7.0.XPACNXM (Android 17) |
 | Xiaomi 13 Ultra | `ishtar` | OS3.0.308.0.WMACNXM (Android 16) |
 
 ### 🚧 Under construction
@@ -132,8 +132,8 @@ phone's model and codename, such as Xiaomi 17 Ultra (nezha). Check it against
 the slot the phone runs from, with the phone in fastboot mode:
 
 ```sh
-unzip skyward-v0.3.1-nezha-OS4.0.4.0.XPACNXM.zip
-fastboot flash recovery skyward-v0.3.1-nezha-OS4.0.4.0.XPACNXM.img
+unzip skyward-v0.3.1-nezha-OS4.0.7.0.XPACNXM.zip
+fastboot flash recovery skyward-v0.3.1-nezha-OS4.0.7.0.XPACNXM.img
 fastboot reboot recovery
 ```
 
@@ -263,6 +263,25 @@ such as `en` or `zh-TW`:
 ```sh
 cargo run --release -p skyward-preview -- target/preview --lang en
 ```
+
+### Adapting to a new system version
+
+`[stock]` in `devices/<codename>.toml` says which system version the image is made
+on: `version` is that build, `package` is where its full update package is, and
+`recovery` is the SHA-256 of the recovery partition inside it. After the phone
+takes an update, change those three lines to the new version and build again:
+
+```sh
+cargo build --release -p skyward-pack
+target/release/skyward-pack stock --config devices/nezha.toml
+```
+
+`skyward-pack stock` checks that partition's SHA-256. Where `recovery` does not
+match, it stops and prints the sum the package actually holds; write that back
+into the file. Try the new image on the phone before trusting it: the screen and
+keys, touch, WLAN, vibration and decryption of the data partition all run from the
+programs of the version it is built on, and the programs listed in `[service]`
+have to be renamed or moved where that version moved them.
 
 ## License
 

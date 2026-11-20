@@ -85,7 +85,7 @@ Skyward 是使用 Rust 编写的 recovery，从零开始编写。
 
 | 机型 | 代号 | 测试的系统版本 |
 | --- | --- | --- |
-| 小米 17 Ultra | `nezha` | OS4.0.4.0.XPACNXM（Android 17） |
+| 小米 17 Ultra | `nezha` | OS4.0.7.0.XPACNXM（Android 17） |
 | 小米 13 Ultra | `ishtar` | OS3.0.308.0.WMACNXM（Android 16） |
 
 ### 🚧 施工中
@@ -119,8 +119,8 @@ Skyward 是使用 Rust 编写的 recovery，从零开始编写。
 Skyward 需要已解锁的 bootloader。从 [Releases](https://github.com/kirklin/skyward/releases) 下载对应机型的 zip，每个文件都标有机型和代号，例如 Xiaomi 17 Ultra (nezha)。使用 `SHA256SUMS` 核对并解压之后，在手机处于 fastboot 模式的时候，把其中的镜像刷入当前运行槽位的 recovery 分区：
 
 ```sh
-unzip skyward-v0.3.1-nezha-OS4.0.4.0.XPACNXM.zip
-fastboot flash recovery skyward-v0.3.1-nezha-OS4.0.4.0.XPACNXM.img
+unzip skyward-v0.3.1-nezha-OS4.0.7.0.XPACNXM.zip
+fastboot flash recovery skyward-v0.3.1-nezha-OS4.0.7.0.XPACNXM.img
 fastboot reboot recovery
 ```
 
@@ -201,6 +201,17 @@ cargo ndk -t arm64-v8a --platform 30 test -p skyward -p skyward-block -p skyward
 ```sh
 cargo run --release -p skyward-preview -- target/preview --lang en
 ```
+
+### 适配新的系统版本
+
+`devices/<codename>.toml` 的 `[stock]` 说明这个镜像是基于哪个系统版本构建的：`version` 是这个版本，`package` 是它完整更新包的地址，`recovery` 是包里 recovery 分区的 SHA-256。手机更新系统之后，把这三行换成新的版本，再按上面的命令重新构建：
+
+```sh
+cargo build --release -p skyward-pack
+target/release/skyward-pack stock --config devices/nezha.toml
+```
+
+`skyward-pack stock` 核对包里那个分区的 SHA-256；`recovery` 对不上时它报错，并给出包里实际的 SHA-256，把它抄回配置里即可。新的镜像要先在手机上验证：屏幕和按键、触摸、WLAN、振动和解密 data 分区都依赖这一版系统里的程序，`[service]` 里列出的程序换了名字或者位置时，也要跟着改。
 
 ## 许可证
 
