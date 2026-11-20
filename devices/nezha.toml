@@ -19,7 +19,7 @@ sources = ["vendor_boot", "vendor_dlkm", "vendor", "system_dlkm"]
 # The touchscreen: Synaptics TouchComm over SPI, behind Xiaomi's touch
 # layer, whose input device the touches come in on. Its firmware is read
 # from /odm/firmware.
-load = ["synaptics_tcm2"]
+load = ["synaptics_tcm2", "stm_st54se_gpio"]
 
 # The driver resets the touch controller as it connects to it, and the
 # controller comes back sending only raw frames, which the system's touch
@@ -28,6 +28,16 @@ load = ["synaptics_tcm2"]
 # through Xiaomi's touch layer, the driver has the controller report
 # positions itself, and has it do so again each time it wakes the
 # controller.
+
+# The secure element's driver, and the channel it makes, which the secure
+# element's service opens as system: the recovery's own ueventd makes it for
+# root alone, as the phone's own makes it for system.
+[[owners]]
+user = "system"
+group = "system"
+mode = 0o660
+paths = ["/dev/st54spi_gpio", "/dev/ir_spi"]
+
 [touch]
 writes = [{ path = "/sys/class/touch/touch_dev/enable_touch_raw", value = "0" }]
 
