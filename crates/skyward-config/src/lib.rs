@@ -782,7 +782,7 @@ mod tests {
     #[test]
     fn each_phone_names_the_stock_build_its_recovery_is_made_on() {
         for (text, version) in [
-            (include_str!("../../../devices/nezha.toml"), "OS4.0.4.0.XPACNXM"),
+            (include_str!("../../../devices/nezha.toml"), "OS4.0.7.0.XPACNXM"),
             (include_str!("../../../devices/ishtar.toml"), "OS3.0.308.0.WMACNXM"),
             (include_str!("../../../devices/pudding.toml"), "OS4.0.4.0.XPCCNXM"),
             (include_str!("../../../devices/pandora.toml"), "OS4.0.4.0.XBLCNXM"),
