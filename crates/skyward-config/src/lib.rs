@@ -700,7 +700,7 @@ mod tests {
         assert_eq!(soc.en, "Snapdragon® 8 Elite Gen 5 Mobile Platform");
         assert_eq!(cfg.display.width, 1200);
         assert_eq!(cfg.display.diagonal, Some(6.9));
-        assert_eq!(cfg.modules.load, ["synaptics_tcm2"]);
+        assert_eq!(cfg.modules.load, ["synaptics_tcm2", "stm_st54se_gpio"], "the touchscreen and the secure element");
         assert_eq!(
             cfg.touch.writes,
             [Write { path: "/sys/class/touch/touch_dev/enable_touch_raw".into(), value: "0".into() }],
@@ -708,6 +708,11 @@ mod tests {
         );
         assert_eq!(cfg.firmware, Some(FirmwarePartition { partition: "modem".into() }));
         assert_eq!(cfg.partitions.mounted, ["persist"], "the secure world keeps its own files there");
+    assert_eq!(
+        cfg.owners,
+        [Owners { user: "system".into(), group: "system".into(), mode: 0o660, paths: vec!["/dev/st54spi_gpio".into(), "/dev/ir_spi".into()] }],
+        "the secure element's service opens its channel as system"
+    );
         let [post_boot] = &cfg.services[..] else { panic!("one program: those that use the phone's keys are read from the phone's own partitions") };
         assert_eq!(post_boot.path, "/vendor/bin/sh");
         assert!(post_boot.oneshot, "the system's own settings for after start are made once");
