@@ -277,7 +277,7 @@ fn weaver(phone: &Phone) -> Result<Vec<Step>> {
     // libhardware.so needs, and the service it would register is never there.
     // As the recovery's own user it reaches the same libraries, opens the same
     // element and registers the same service.
-    weaver.service.user = "root".to_string();
+    weaver.service.user = Some("root".to_string());
     weaver.service.groups = Vec::new();
     out.push(Step::Start(Box::new(weaver)));
     Ok(out)
