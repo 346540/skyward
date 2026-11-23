@@ -716,7 +716,12 @@ mod tests {
         assert_eq!(soc.en, "Snapdragon® 8 Elite Gen 5 Mobile Platform");
         assert_eq!(cfg.display.width, 1200);
         assert_eq!(cfg.display.diagonal, Some(6.9));
-        assert_eq!(cfg.modules.load, ["synaptics_tcm2"]);
+        assert_eq!(cfg.modules.load, ["synaptics_tcm2", "stm_st54se_gpio"], "the touchscreen and the secure element");
+        assert_eq!(
+            cfg.owners,
+            [Owners { user: "system".into(), group: "system".into(), mode: 0o660, paths: vec!["/dev/st54spi_gpio".into(), "/dev/ir_spi".into()] }],
+            "the secure element's service opens its channel as system"
+        );
         assert_eq!(
             cfg.touch.writes,
             [Write { path: "/sys/class/touch/touch_dev/enable_touch_raw".into(), value: "0".into() }],
@@ -798,7 +803,7 @@ mod tests {
     #[test]
     fn each_phone_names_the_stock_build_its_recovery_is_made_on() {
         for (text, version) in [
-            (include_str!("../../../devices/nezha.toml"), "OS4.0.4.0.XPACNXM"),
+            (include_str!("../../../devices/nezha.toml"), "OS4.0.7.0.XPACNXM"),
             (include_str!("../../../devices/ishtar.toml"), "OS3.0.308.0.WMACNXM"),
             (include_str!("../../../devices/pudding.toml"), "OS4.0.4.0.XPCCNXM"),
             (include_str!("../../../devices/pandora.toml"), "OS4.0.4.0.XBLCNXM"),
