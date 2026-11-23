@@ -225,7 +225,7 @@ fn nezha_s_programs_are_found_as_they_were_started_on_the_phone() {
         Started::from(Service {
             ready_service: Some(WEAVER.into()),
             capabilities: strings(&["WAKE_ALARM"]),
-            ..program("/odm/bin/hw/android.hardware.weaver-service", &ON_ODM, "system", &["system", "drmrpc"])
+            ..program("/odm/bin/hw/android.hardware.weaver-service", &ON_ODM, "root", &[])
         }),
         Started::from(Service { ready_service: Some(BOOT.into()), ..program("/vendor/bin/hw/android.hardware.boot-service.qti", &ON_VENDOR, "root", &["root"]) }),
     ];
