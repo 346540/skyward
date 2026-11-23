@@ -6,6 +6,13 @@ English | [简体中文](README.zh-CN.md)
 
 Skyward is a recovery written in Rust, from scratch.
 
+> **This branch is the Xiaomi 17 Ultra (
+ezha) build.** The image, its device.toml,
+> the decryption notes and the release for HyperOS OS4.0.7.0.XPACNXM live in
+> [346540/skyward-nezha](https://github.com/346540/skyward-nezha). Upstream is
+> [kirklin/skyward](https://github.com/kirklin/skyward).
+
+
 <p align="center">
   <img src="assets/home.png" width="30%" alt="Home">
   <img src="assets/settings-dark.png" width="30%" alt="Settings in dark mode">
@@ -103,7 +110,7 @@ merged, super and the logical partitions in it are not flashed.
 
 | Device | Codename | Tested system version |
 | --- | --- | --- |
-| Xiaomi 17 Ultra | `nezha` | OS4.0.4.0.XPACNXM (Android 17) |
+| Xiaomi 17 Ultra | `nezha` | OS4.0.7.0.XPACNXM (Android 17) |
 | Xiaomi 13 Ultra | `ishtar` | OS3.0.308.0.WMACNXM (Android 16) |
 | REDMI K60 Pro | `socrates` | OS4.0.0.24.XMKCNXM (Android 17) |
 
@@ -147,8 +154,8 @@ phone's model and codename, such as Xiaomi 17 Ultra (nezha). Check it against
 the slot the phone runs from, with the phone in fastboot mode:
 
 ```sh
-unzip skyward-v0.5.1-nezha-OS4.0.4.0.XPACNXM.zip
-fastboot flash recovery skyward-v0.5.1-nezha-OS4.0.4.0.XPACNXM.img
+unzip skyward-v0.5.2-nezha-OS4.0.7.0.XPACNXM.zip
+fastboot flash recovery skyward-v0.5.2-nezha-OS4.0.7.0.XPACNXM.img
 fastboot reboot recovery
 ```
 

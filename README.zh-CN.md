@@ -88,7 +88,7 @@ Skyward 是使用 Rust 编写的 recovery，从零开始编写。
 
 | 机型 | 代号 | 测试的系统版本 |
 | --- | --- | --- |
-| 小米 17 Ultra | `nezha` | OS4.0.4.0.XPACNXM（Android 17） |
+| 小米 17 Ultra | `nezha` | OS4.0.7.0.XPACNXM（Android 17） |
 | 小米 13 Ultra | `ishtar` | OS3.0.308.0.WMACNXM（Android 16） |
 | REDMI K60 Pro | `socrates` | OS4.0.0.24.XMKCNXM（Android 17） |
 
@@ -123,8 +123,8 @@ Skyward 是使用 Rust 编写的 recovery，从零开始编写。
 Skyward 需要已解锁的 bootloader。从 [Releases](https://github.com/kirklin/skyward/releases) 下载对应机型的 zip，每个文件都标有机型和代号，例如 Xiaomi 17 Ultra (nezha)。使用 `SHA256SUMS` 核对并解压之后，在手机处于 fastboot 模式的时候，把其中的镜像刷入当前运行槽位的 recovery 分区：
 
 ```sh
-unzip skyward-v0.5.1-nezha-OS4.0.4.0.XPACNXM.zip
-fastboot flash recovery skyward-v0.5.1-nezha-OS4.0.4.0.XPACNXM.img
+unzip skyward-v0.5.2-nezha-OS4.0.7.0.XPACNXM.zip
+fastboot flash recovery skyward-v0.5.2-nezha-OS4.0.7.0.XPACNXM.img
 fastboot reboot recovery
 ```
 

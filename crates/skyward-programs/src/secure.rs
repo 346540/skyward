@@ -290,6 +290,15 @@ fn weaver(phone: &Phone) -> Result<Vec<Step>> {
     }
     let mut weaver = started(phone, program, Ready::Service(WEAVER.into()), besides(phone, program, WEAVER, |_| false));
     weaver.anew = *through == Through::ElementService;
+    // The weaver is built against the installed system's libraries, and some
+    // of them, such as the libvndksupport.so the vendor partition's
+    // libhardware.so needs, are only under /mnt: as the user its init script
+    // names, its loader stops there and the service it would register is
+    // never there, though the folders are open to every user. As the
+    // recovery's own user it links, opens the same element through the same
+    // service and registers the same service.
+    weaver.service.user = Some("root".to_string());
+    weaver.service.groups = Vec::new();
     out.push(Step::Start(Box::new(weaver)));
     Ok(out)
 }
